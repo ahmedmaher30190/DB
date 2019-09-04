@@ -23,7 +23,7 @@ class DB{
 	private static $instance = null;
 	private $dbh = null, $table, $columns, $sql, $bindValues, $getSQL,
 	$where, $orWhere, $whereCount=0, $isOrWhere = false,
-	$rowCount=0, $limit, $orderBy, $lastIDInserted = 0;
+	$rowCount=0, $limit, $orderBy, $lastIDInserted = 0,$between;
 
 	// Initial values for pagination array
 	private $pagination = ['previousPage' => null,'currentPage' => 1,'nextPage' => null,'lastPage' => null, 'totalRows' => null];
@@ -114,6 +114,7 @@ class DB{
 		$this->getSQL = null;
 		$this->where = null;
 		$this->orWhere = null;
+		$this->between = null;
 		$this->whereCount = 0;
 		$this->isOrWhere = false;
 		$this->rowCount = 0;
@@ -125,7 +126,7 @@ class DB{
 		$this->resetQuery();
 
 		$this->sql = "DELETE FROM `{$table_name}`";
-		
+
 		if (isset($id)) {
 			// if there is an ID
 			if (is_numeric($id)) {
@@ -147,7 +148,7 @@ class DB{
 						}else{
 							$this->where .= " AND ";
 						}
-						
+
 						$x++;
 					}
 					$count_param = count($param);
@@ -210,7 +211,7 @@ class DB{
 		}
 
 		$this->sql = "UPDATE `{$table_name}` SET $set";
-		
+
 		if (isset($id)) {
 			// if there is an ID
 			if (is_numeric($id)) {
@@ -232,7 +233,7 @@ class DB{
 						}else{
 							$this->where .= " AND ";
 						}
-						
+
 						$x++;
 					}
 					$count_param = count($param);
@@ -294,7 +295,7 @@ class DB{
 			}
 			$x++;
 		}
- 
+
 		$this->sql = "INSERT INTO `{$table_name}` (`{$keys}`) VALUES ({$values})";
 		$this->getSQL = $this->sql;
 		$stmt = $this->dbh->prepare($this->sql);
@@ -322,9 +323,9 @@ class DB{
 		foreach ($columns as $key => $column) {
 			$columns[$key] = trim($column);
 		}
-		
+
 		$columns = implode('`, `', $columns);
-		
+
 
 		$this->columns = "`{$columns}`";
 		return $this;
@@ -364,7 +365,7 @@ class DB{
 						}else{
 							$this->where .= " AND ";
 						}
-						
+
 						$x++;
 					}
 					$count_param = count($param);
@@ -415,7 +416,7 @@ class DB{
 			$this->bindValues[] =  $args[1];
 
 		}elseif ($num_args == 3) {
-			
+
 			$this->where .= "`".trim($args[0]). "` ". $args[1]. " ?";
 			$this->bindValues[] =  $args[2];
 		}
@@ -454,7 +455,7 @@ class DB{
 						}else{
 							$this->where .= " AND ";
 						}
-						
+
 						$x++;
 					}
 					$count_param = count($param);
@@ -505,7 +506,7 @@ class DB{
 			$this->bindValues[] =  $args[1];
 
 		}elseif ($num_args == 3) {
-			
+
 			$this->where .= "`".trim($args[0]). "` ". $args[1]. " ?";
 			$this->bindValues[] =  $args[2];
 		}
@@ -604,7 +605,7 @@ class DB{
 			}else{
 				$this->orderBy .= ", $field_name $order";
 			}
-			
+
 		}
 
 		return $this;
@@ -771,7 +772,7 @@ class MareiObj{
         header("Content-Type: application/json;charset=utf-8");
         return json_encode($this, JSON_NUMERIC_CHECK);
     }
-    
+
 }
 // End Marei Object Class
 
@@ -838,8 +839,6 @@ class MareiCollection implements ArrayAccess{
           header("Content-Type: application/json;charset=utf-8");
           // return json_encode(get_object_vars($this));
           return  $this->toJSON();
-
       }
-
 }
 // End Marei Collection Class
