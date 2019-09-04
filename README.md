@@ -1,4 +1,6 @@
-# Welcome to Marei's DB class V 1.0
+# Welcome to Marei's DB class V 2.0
+[![version](https://img.shields.io/badge/version-2.0-blue.svg)](http://127.0.0.1:300)
+
 MareiDB class is a simple query builder class in PHP to increase your productivity, you can't imagine how much time you're gonna save if you're using this class! .
 ## Features
 * Totally Secured :
